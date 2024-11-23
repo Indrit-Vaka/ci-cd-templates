@@ -79,27 +79,23 @@ jobs:
     needs: docker
     environment: ${{inputs.environment}}
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Code
+      - name: "Checkout"
         uses: actions/checkout@v4
-
-      - name: Install sshpass
-        run: sudo apt-get update && sudo apt-get install -y sshpass
-
-      - name: Deploy Files with Password
-        run: |
-          sshpass -p "${{secrets.SSH_PASSWORD}}" \
-          rsync -avz --progress --rsh="ssh -o StrictHostKeyChecking=no" \
-          ${{inputs.local-path}} \
-          ${{secrets.SSH_USER}}@${{secrets.HOST}}:${{inputs.remote-path}}
-
-      - name: Run Deployment Script with Password
-        run: |
-          sshpass -p "${{secrets.SSH_PASSWORD}}" \
-          ssh -o StrictHostKeyChecking=no \
-          ${{secrets.SSH_USER}}@${{secrets.HOST}} \
-          "${{inputs.deploy-script}}"
+        with:
+          fetch-depth: 0
+      - name: "verify variable"
+        run: echo ${{inputs.environment}} || echo ${{secrets.HOST}}
+      - name: "Deploy to dev"
+        uses: milanmk/actions-file-deployer@master
+        with:
+          sync: delta
+          remote-protocol: "sftp"
+          remote-host: ${{secrets.HOST}}
+          remote-user: ${{secrets.SSH_USER}}
+          ssh-private-key: ${{secrets.SSH_PRIVATE_KEY}}
+          local-path: ${{inputs.local-path}}
+          remote-path: ${{inputs.remote-path}}
 
       - name: install ssh keys
         uses: appleboy/ssh-action@master
