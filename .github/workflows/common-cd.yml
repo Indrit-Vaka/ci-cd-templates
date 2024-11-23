@@ -85,7 +85,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: "verify variable"
-        run: echo ${{inputs.environment}} || echo ${{secrets.HOST}}
+        run: echo ${{inputs.environment}} || echo ${{secrets.HOST}} || "local path:${{inputs.local-path}}"
       - name: "Deploy to dev"
         uses: milanmk/actions-file-deployer@master
         with:
