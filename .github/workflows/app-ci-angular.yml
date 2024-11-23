@@ -35,7 +35,7 @@ jobs:
       - name: Installing dependencies
         run: npm install
       - name: Running unit test
-        run: npm run test:unit:ci
+        run: npm run test
 
   build:
     runs-on: ubuntu-latest
