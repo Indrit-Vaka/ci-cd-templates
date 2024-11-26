@@ -12,6 +12,12 @@ on:
       remote-path:
         required: true
         type: string
+      config-local-path:
+        required: true
+        type: string
+      config-remote-path:
+        required: true
+        type: string
       docker-file-path:
         required: true
         type: string
@@ -96,7 +102,16 @@ jobs:
           ssh-private-key: ${{secrets.SSH_PRIVATE_KEY}}
           local-path: ${{inputs.local-path}}
           remote-path: ${{inputs.remote-path}}
-
+      - name: "Deploy to server configuration script"
+        uses: milanmk/actions-file-deployer@master
+        with:
+          sync: delta
+          remote-protocol: "sftp"
+          remote-host: ${{secrets.HOST}}
+          remote-user: ${{secrets.SSH_USER}}
+          ssh-private-key: ${{secrets.SSH_PRIVATE_KEY}}
+          local-path: ${{inputs.config-local-path}}
+          remote-path: ${{inputs.config-remote-path}}
       - name: install ssh keys
         uses: appleboy/ssh-action@master
         with:
