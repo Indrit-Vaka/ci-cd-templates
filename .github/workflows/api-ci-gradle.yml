@@ -2,6 +2,23 @@ name: Continuous Integration For Gradle
 
 on:
   workflow_call:
+    inputs:
+      run-unit-test:
+        required: false
+        type: boolean
+        default: false
+      run-integration-test:
+        required: false
+        type: boolean
+        default: false
+      run-build:
+        required: false
+        type: boolean
+        default: false
+      run-sonar:
+        required: false
+        type: boolean
+        default: false
     secrets:
       git_token:
         required: true
@@ -11,6 +28,7 @@ on:
 jobs:
 
   unit-test:
+    if: ${{ inputs.run-unit-test }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -24,6 +42,7 @@ jobs:
         run: gradle test
 
   integration-test:
+    if: ${{ inputs.run-integration-test }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -37,6 +56,7 @@ jobs:
         run: gradle integTest
 
   build:
+    if: ${{ inputs.run-build }}
     needs: [integration-test,unit-test]
     runs-on: ubuntu-latest
     steps:
@@ -56,6 +76,7 @@ jobs:
           path: build/libs/
 
   sonar:
+    if: ${{ inputs.run-sonar }}
     needs: build
     name: Build and analyze
     runs-on: ubuntu-latest
