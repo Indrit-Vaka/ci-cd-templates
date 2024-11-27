@@ -57,7 +57,7 @@ jobs:
 
   build:
     if: ${{ inputs.run-build }}
-    needs: ${{ inputs.run-integration-test && inputs.run-unit-test ? ['integration-test', 'unit-test'] : (inputs.run-integration-test ? ['integration-test'] : (inputs.run-unit-test ? ['unit-test'] : [])) }}
+#    needs: [integration-test,unit-test]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
