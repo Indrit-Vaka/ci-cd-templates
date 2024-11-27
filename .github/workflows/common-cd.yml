@@ -13,10 +13,10 @@ on:
         required: true
         type: string
       config-local-path:
-        required: true
+        required: false
         type: string
       config-remote-path:
-        required: true
+        required: false
         type: string
       docker-file-path:
         required: true
@@ -103,6 +103,7 @@ jobs:
           local-path: ${{inputs.local-path}}
           remote-path: ${{inputs.remote-path}}
       - name: "Deploy to server configuration script"
+        if: ${{ inputs.config-local-path && inputs.config-remote-path }}
         uses: milanmk/actions-file-deployer@master
         with:
           sync: delta
